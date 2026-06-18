@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Search, MapPin, Home, DollarSign } from "lucide-react";
+import Image from "next/image";
 
 export default function Banner() {
   const router = useRouter();
@@ -22,7 +23,13 @@ export default function Banner() {
 
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center bg-[url('/hero-bg.jpg')] bg-cover bg-center pt-16">
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-black/40 z-1" />
+      <Image
+        src="/banner.jpg"
+        alt="Hero Background"
+        fill
+        className="object-cover "
+      />
 
       <div className="relative max-w-4xl mx-auto px-6 text-center text-white z-10">
         <motion.h1
@@ -87,7 +94,7 @@ export default function Banner() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer">
+            className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer">
             <Search className="size-4" /> Search
           </button>
         </motion.form>

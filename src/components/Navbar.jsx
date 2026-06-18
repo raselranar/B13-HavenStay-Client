@@ -2,9 +2,18 @@
 "use client";
 import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
 
 export default function Navbar() {
   const { data: session, isPending } = useSession();
+  const path = usePathname();
+
+  const isActive = (url) => {
+    return path === url
+      ? "text-primary border-b-2 border-primary"
+      : "text-gray-600";
+  };
 
   const links = [
     {
@@ -17,8 +26,19 @@ export default function Navbar() {
     },
   ];
 
+  const protectedLinks = [
+    {
+      label: "Dashboard",
+      url: "/dashboard",
+    },
+  ];
+
+  if (session) {
+    links.push(...protectedLinks);
+  }
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-gray-100 shadow-xs">
+    <nav className="sticky top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-gray-100 shadow-xs">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Brand Logo & Name */}
         <Link
@@ -28,7 +48,7 @@ export default function Navbar() {
         </Link>
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-8 text-sm font-medium text-gray-600">
+        <ul className="flex items-center gap-8 text-sm font-medium text-gray-600">
           {/* <Link href="/" className="hover:text-blue-600 transition-colors">
             Home
           </Link>
@@ -38,33 +58,27 @@ export default function Navbar() {
             All Properties
           </Link> */}
           {links.map((links) => (
-            <Link href={links.url} key={links.url}>
-              {links.label}
-            </Link>
+            <li
+              key={links.url}
+              className={
+                isActive(links.url) +
+                " *:hover:text-primary transition-colors px-1 py-px"
+              }>
+              <Link href={links.url}>{links.label}</Link>
+            </li>
           ))}
-          {session && (
-            <Link
-              href="/dashboard"
-              className="hover:text-blue-600 transition-colors">
-              Dashboard
-            </Link>
-          )}
-        </div>
+        </ul>
 
         {/* Authentication Actions */}
         <div className="flex items-center gap-4">
           {!isPending && !session ? (
             <>
-              <Link
-                href="/login"
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Register
-              </Link>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button size="lg" asChild>
+                <Link href="/register">Register</Link>
+              </Button>
             </>
           ) : (
             <button

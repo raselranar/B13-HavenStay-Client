@@ -4,22 +4,22 @@ export default function WhyChooseUs() {
     {
       title: "Verified & Secured",
       desc: "Every property goes through a rigorous inspection process.",
-      bg: "bg-white text-gray-900 border border-gray-100",
+      bg: "bg-gradient-to-br from-emerald-50 to-teal-50 text-gray-900 border border-emerald-200",
     },
     {
       title: "24/7 Global Support",
       desc: "Our dedicated support team is available in 12+ languages.",
-      bg: "bg-blue-600 text-white",
+      bg: "bg-gradient-to-br from-blue-500 to-blue-600 text-white",
     },
     {
       title: "Zero Hidden Fees",
       desc: "What you see is what you pay. Transparent pricing always.",
-      bg: "bg-white text-gray-900 border border-gray-100",
+      bg: "bg-gradient-to-br from-purple-50 to-pink-50 text-gray-900 border border-purple-200",
     },
     {
       title: "Yield Optimization",
       desc: "Property owners earn more using dynamic matching algorithms.",
-      bg: "bg-slate-900 text-white",
+      bg: "bg-gradient-to-br from-slate-800 to-slate-900 text-white",
     },
   ];
 
