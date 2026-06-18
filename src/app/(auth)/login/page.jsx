@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import GoogleAuthButton from "@/components/ui/GoogleAuthButton";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,31 +38,24 @@ export default function LoginPage() {
       const { data, error: authError } = await authClient.signIn.email({
         email: values.email,
         password: values.password,
-        dontRemember: !values.rememberMe,
+        rememberMe: !values.rememberMe,
       });
 
       if (authError) {
+        toast.error(
+          authError.message || "Login failed. Please check your credentials.",
+        );
         setError(authError.message || "Invalid credentials. Please try again.");
       } else {
+        toast.success("Login successful. Redirecting...");
         router.push("/");
         router.refresh();
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Google Social Login Functionality [cite: 24]
-  const handleGoogleLogin = async () => {
-    try {
-      await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "/",
-      });
-    } catch (err) {
-      console.error("Google login failed:", err);
     }
   };
 
@@ -83,13 +79,11 @@ export default function LoginPage() {
         <p className="text-xs text-gray-500 mb-6">
           Enter your credentials to manage your bookings.
         </p>
-
         {error && (
           <div className="mb-4 text-xs bg-red-50 text-red-600 p-3 rounded-lg border border-red-100">
             {error}
           </div>
         )}
-
         {/* Credentials Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Email input field */}
@@ -147,8 +141,8 @@ export default function LoginPage() {
                     : "border-gray-200"
                 }`}
               />
-              <button
-                type="button"
+              <Button
+                type="Button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors">
                 {showPassword ? (
@@ -156,7 +150,7 @@ export default function LoginPage() {
                 ) : (
                   <Eye className="size-4" />
                 )}
-              </button>
+              </Button>
             </div>
             {errors.password && (
               <p className="text-[11px] text-red-500 mt-1">
@@ -181,14 +175,16 @@ export default function LoginPage() {
           </div>
 
           {/* Action Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary hover:bg-primary/80 disabled:bg-indigo-400 text-white font-medium text-sm py-2.5 rounded-xl transition-colors mt-2 cursor-pointer">
-            {loading ? "Logging in..." : "Login"}
-          </button>
+          <div className="">
+            <Button
+              type="submit"
+              variant="lg"
+              disabled={loading}
+              className="w-full h-fit bg-primary hover:bg-primary/80 disabled:bg-indigo-400 text-white font-medium text-sm py-2.5 rounded-xl transition-colors mt-2 cursor-pointer">
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </div>
         </form>
-
         {/* Separator UI element */}
         <div className="relative my-6 text-center">
           <div className="absolute inset-0 flex items-center">
@@ -198,32 +194,7 @@ export default function LoginPage() {
             Or continue with
           </span>
         </div>
-
-        {/* Google OAuth Trigger Button */}
-        <button
-          type="button"
-          onClick={handleGoogleLogin}
-          className="w-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-medium text-sm py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer">
-          <svg className="size-4" viewBox="0 0 24 24" width="16" height="16">
-            <path
-              fill="#EA4335"
-              d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"
-            />
-            <path
-              fill="#4285F4"
-              d="M23.455 12.273c0-.818-.073-1.609-.209-2.364H12v4.477h6.432a5.505 5.505 0 0 1-2.386 3.614v3.009h3.836c2.245-2.073 3.573-5.114 3.573-8.736Z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.266 14.235A7.115 7.115 0 0 1 4.909 12c0-.79.132-1.555.357-2.265L1.24 6.62A11.934 11.934 0 0 0 0 12c0 1.927.455 3.745 1.255 5.373l4.011-3.138Z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 24c3.24 0 5.955-1.073 7.936-2.918l-3.836-3.009c-1.064.714-2.427 1.141-4.1 1.141-3.164 0-5.845-2.136-6.805-5.018L1.184 17.34A11.944 11.944 0 0 0 12 24Z"
-            />
-          </svg>
-          Sign in with Google
-        </button>
+        <GoogleAuthButton />{" "}
       </div>
 
       {/* Alternate action link */}

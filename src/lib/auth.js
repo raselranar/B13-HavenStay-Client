@@ -6,4 +6,12 @@ export const auth = betterAuth({
     enabled: true,
   },
   socialProviders: {},
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "tenant",
+      },
+    },
+  },
 });
