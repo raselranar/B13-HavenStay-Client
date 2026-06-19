@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import PropertiesCard from "@/components/ui/PropertiesCard";
 
 export default function PropertiesPage({ properties: initialProperties }) {
   const router = useRouter();
@@ -208,52 +209,11 @@ export default function PropertiesPage({ properties: initialProperties }) {
             </div>
           ) : (
             visible.map((property, idx) => (
-              <motion.div
+              <PropertiesCard
                 key={property._id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.05 }}
-                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col h-full">
-                <div className="relative aspect-4/3 bg-gray-100 overflow-hidden">
-                  <Image
-                    src={property.images?.[0] || "/placeholder.jpg"}
-                    alt={property.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    width={300}
-                    height={300}
-                  />
-                </div>
-
-                <div className="p-5 flex flex-col flex-1 justify-between">
-                  <div>
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-bold text-gray-900 line-clamp-1">
-                        {property.title}
-                      </h3>
-                      <span className="text-primary font-semibold text-sm shrink-0">
-                        ${property.rent}
-                        <span className="text-gray-400 font-normal text-xs">
-                          /{property.rentType}
-                        </span>
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-400 mb-4">
-                      {property.location}
-                    </p>
-                    <div className="flex gap-4 text-xs text-gray-500 mb-6">
-                      <span>🛏️ {property.bedrooms} Beds</span>
-                      <span>🛁 {property.bathrooms} Baths</span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handleDetails(property._id)}
-                    className="w-full text-center bg-primary hover:bg-primary/80 text-white py-2.5 rounded-xl font-medium text-sm transition-colors cursor-pointer">
-                    View Details
-                  </button>
-                </div>
-              </motion.div>
+                property={property}
+                idx={idx}
+              />
             ))
           )}
         </div>

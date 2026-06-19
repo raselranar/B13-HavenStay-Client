@@ -19,6 +19,11 @@ export default function CustomerReviews() {
       message: "Fast support and smooth checkout. Highly recommended!",
       rating: 5,
     },
+    {
+      author: "Emily Davis",
+      message: "A fantastic platform for finding verified stays. Love it!",
+      rating: 5,
+    },
   ];
 
   return (
@@ -29,7 +34,7 @@ export default function CustomerReviews() {
         </h2>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 grid gap-6 md:grid-cols-3">
+      <div className="max-w-7xl mx-auto px-6 grid gap-6 md:grid-cols-4">
         {reviews.map((review, index) => (
           <motion.div
             key={index}
@@ -37,7 +42,7 @@ export default function CustomerReviews() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.08 }}
             viewport={{ once: true }}
-            className="rounded-3xl bg-white p-8 shadow-sm border border-slate-200">
+            className="rounded-3xl bg-white p-6 shadow-sm border border-slate-200">
             <div className="mb-5 flex items-center gap-1 text-amber-400 text-xl">
               {Array.from({ length: review.rating }).map((_, starIndex) => (
                 <span key={starIndex}>★</span>

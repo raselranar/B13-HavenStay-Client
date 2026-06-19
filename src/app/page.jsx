@@ -5,13 +5,16 @@ import FeaturedProperties from "@/components/home/FeaturedProperties";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import PopularCities from "@/components/home/PopularCities";
 import CustomerReviews from "@/components/home/CustomerReviews";
+import { serverFetch } from "@/lib/core/server";
 // import Footer from "@/components/Footer";
 
-export default function Home() {
+export default async function Home() {
+  const featuredProperties = await serverFetch("/api/properties/featured");
+  console.log(featuredProperties);
   return (
     <main className="min-h-screen bg-white">
       <Banner />
-      <FeaturedProperties />
+      <FeaturedProperties featuredProperties={featuredProperties} />
       <WhyChooseUs />
       <PopularCities />
       <CustomerReviews />
