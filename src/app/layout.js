@@ -17,14 +17,14 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const { user: session } = await getUserSession();
+  const session = await getUserSession();
 
-  console.log(session);
+  console.log(session?.user);
 
   return (
     <html lang="en" className={`${inter.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <Navbar session={session} />
+        <Navbar session={session?.user} />
         <main className="flex-1">{children}</main>
         <Toaster />
         <Footer />

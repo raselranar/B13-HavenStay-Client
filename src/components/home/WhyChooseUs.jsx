@@ -1,4 +1,7 @@
 // src/components/WhyChooseUs.jsx
+"use client";
+import { motion } from "framer-motion";
+
 export default function WhyChooseUs() {
   const cards = [
     {
@@ -36,15 +39,19 @@ export default function WhyChooseUs() {
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card, i) => (
-          <div
+          <motion.div
             key={i}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: i * 0.08 }}
+            viewport={{ once: true }}
             className={`p-8 rounded-2xl shadow-xs flex flex-col justify-between min-h-[200px] ${card.bg}`}>
             <div>
               <div className="mb-4 text-xl">✦</div>
               <h3 className="font-bold text-base mb-2">{card.title}</h3>
             </div>
             <p className="text-sm opacity-80">{card.desc}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

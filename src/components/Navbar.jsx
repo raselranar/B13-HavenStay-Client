@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import NavLink from "./ui/NavLink";
+import AuthButtons from "./ui/AuthButtons";
 
 export default function Navbar({ session = null, currentPath = null }) {
   const isActive = (url) => {
@@ -9,6 +10,17 @@ export default function Navbar({ session = null, currentPath = null }) {
     return currentPath === url
       ? "text-primary border-b-2 border-primary"
       : "text-gray-600";
+  };
+
+  // logout handler
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login"); // redirect to login page
+        },
+      },
+    });
   };
 
   const links = [
@@ -62,24 +74,7 @@ export default function Navbar({ session = null, currentPath = null }) {
         </ul>
 
         {/* Authentication Actions */}
-        <div className="flex items-center gap-4">
-          {!session ? (
-            <>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button size="lg" asChild>
-                <Link href="/register">Register</Link>
-              </Button>
-            </>
-          ) : (
-            <form action="/api/auth/signout" method="post">
-              <Button type="submit" size="lg" variant="destructive">
-                Logout
-              </Button>
-            </form>
-          )}
-        </div>
+        <AuthButtons session={session} />
       </div>
     </nav>
   );
