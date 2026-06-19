@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { getUserSession } from "@/lib/core/session";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,8 +26,11 @@ export default async function RootLayout({ children }) {
     <html lang="en" className={`${inter.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <Navbar session={session?.user} />
-        <main className="flex-1">{children}</main>
+        <TooltipProvider>
+          <main className="flex-1">{children}</main>
+        </TooltipProvider>
         <Toaster />
+
         <Footer />
       </body>
     </html>

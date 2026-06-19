@@ -8,7 +8,10 @@ import Image from "next/image";
 
 export default function PropertiesPage({ properties: initialProperties }) {
   const router = useRouter();
-  const [properties, setProperties] = useState(initialProperties);
+  const [properties, setProperties] = useState(
+    // accept either { items, total } or plain array
+    initialProperties?.items ?? initialProperties ?? [],
+  );
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("All Cities");
@@ -16,6 +19,16 @@ export default function PropertiesPage({ properties: initialProperties }) {
   const [sortBy, setSortBy] = useState("price_asc");
   const [page, setPage] = useState(1);
   const pageSize = 9;
+  const [totalPages, setTotalPages] = useState(
+    Math.max(
+      1,
+      Math.ceil(
+        (initialProperties?.total ??
+          initialProperties?.length ??
+          properties.length) / pageSize,
+      ),
+    ),
+  );
 
   // useEffect(() => {
   //   let cancelled = false;
@@ -36,40 +49,88 @@ export default function PropertiesPage({ properties: initialProperties }) {
   //   };
   // }, []);
 
-  const filtered = useMemo(() => {
-    let items = [...properties];
-    if (query) {
-      const q = query.toLowerCase();
-      items = items.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.location.toLowerCase().includes(q),
-      );
-    }
-    if (locationFilter !== "All Cities") {
-      items = items.filter((p) =>
-        p.location.toLowerCase().includes(locationFilter.toLowerCase()),
-      );
-    }
-    if (typeFilter !== "All Types") {
-      items = items.filter((p) => p.type === typeFilter);
-    }
-
-    if (sortBy === "price_asc") items.sort((a, b) => a.rent - b.rent);
-    if (sortBy === "price_desc") items.sort((a, b) => b.rent - a.rent);
-
-    return items;
-  }, [properties, query, locationFilter, typeFilter, sortBy]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const visible = filtered.slice((page - 1) * pageSize, page * pageSize);
+  // visible items come from API (already paginated) — stored in `properties`.
+  // When API is not available we fall back to client-side sample data.
+  const visible = properties;
 
   const handleDetails = (id) => {
     router.push(`/properties/${id}`);
   };
 
+  // Fetch from API with filters and pagination
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchProps = async () => {
+      setLoading(true);
+      try {
+        const params = {
+          q: query || undefined,
+          city: locationFilter !== "All Cities" ? locationFilter : undefined,
+          type: typeFilter !== "All Types" ? typeFilter : undefined,
+          sort: sortBy,
+          page,
+          pageSize,
+        };
+
+        const res = await axios.get("/api/properties", {
+          params,
+          signal: controller.signal,
+        });
+
+        // Support both { items, total } and plain arrays
+        if (res.data?.items) {
+          setProperties(res.data.items);
+          setTotalPages(
+            Math.max(
+              1,
+              Math.ceil(
+                (res.data.total || res.data.count || res.data.items.length) /
+                  pageSize,
+              ),
+            ),
+          );
+        } else if (Array.isArray(res.data)) {
+          setProperties(res.data);
+          setTotalPages(Math.max(1, Math.ceil(res.data.length / pageSize)));
+        } else {
+          // unknown shape — try to read .data
+          setProperties(
+            res.data?.data ??
+              sampleProperties.slice((page - 1) * pageSize, page * pageSize),
+          );
+          setTotalPages(
+            Math.max(
+              1,
+              Math.ceil(
+                (res.data?.total ?? sampleProperties.length) / pageSize,
+              ),
+            ),
+          );
+        }
+      } catch (err) {
+        // fallback to sample data on error
+        const items = sampleProperties.slice(
+          (page - 1) * pageSize,
+          page * pageSize,
+        );
+        setProperties(items);
+        setTotalPages(
+          Math.max(1, Math.ceil(sampleProperties.length / pageSize)),
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProps();
+
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, locationFilter, typeFilter, sortBy, page]);
+
   return (
-    <main className="min-h-screen bg-white py-12">
+    <main className="min-h-screen bg-background py-12">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Explore Premium Properties</h1>
@@ -83,12 +144,18 @@ export default function PropertiesPage({ properties: initialProperties }) {
           <div className="flex gap-4">
             <input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(1);
+              }}
               placeholder="Search by city, neighborhood, or building..."
               className="flex-1 border rounded-xl px-4 py-3 shadow-sm"
             />
             <button
-              onClick={() => setQuery("")}
+              onClick={() => {
+                setQuery("");
+                setPage(1);
+              }}
               className="px-4 py-3 rounded-xl bg-gray-100">
               Clear
             </button>
@@ -97,7 +164,10 @@ export default function PropertiesPage({ properties: initialProperties }) {
           <div className="flex gap-3 justify-end items-center">
             <select
               value={locationFilter}
-              onChange={(e) => setLocationFilter(e.target.value)}
+              onChange={(e) => {
+                setLocationFilter(e.target.value);
+                setPage(1);
+              }}
               className="border rounded-xl px-3 py-2">
               <option>All Cities</option>
               <option>Dhaka</option>
@@ -106,7 +176,10 @@ export default function PropertiesPage({ properties: initialProperties }) {
             </select>
             <select
               value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
+              onChange={(e) => {
+                setTypeFilter(e.target.value);
+                setPage(1);
+              }}
               className="border rounded-xl px-3 py-2">
               <option>All Types</option>
               <option>Apartment</option>
@@ -115,7 +188,10 @@ export default function PropertiesPage({ properties: initialProperties }) {
             </select>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => {
+                setSortBy(e.target.value);
+                setPage(1);
+              }}
               className="border rounded-xl px-3 py-2">
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
@@ -155,7 +231,7 @@ export default function PropertiesPage({ properties: initialProperties }) {
                       <h3 className="font-bold text-gray-900 line-clamp-1">
                         {property.title}
                       </h3>
-                      <span className="text-blue-600 font-semibold text-sm shrink-0">
+                      <span className="text-primary font-semibold text-sm shrink-0">
                         ${property.rent}
                         <span className="text-gray-400 font-normal text-xs">
                           /{property.rentType}

@@ -1,27 +1,16 @@
-// src/components/Navbar.jsx
+"use client";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import NavLink from "./ui/NavLink";
 import AuthButtons from "./ui/AuthButtons";
+import { usePathname, useRouter } from "next/navigation";
 
-export default function Navbar({ session = null, currentPath = null }) {
-  const isActive = (url) => {
-    if (!currentPath) return "text-gray-600";
-    return currentPath === url
-      ? "text-primary border-b-2 border-primary"
-      : "text-gray-600";
-  };
-
-  // logout handler
-  const handleLogout = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/login"); // redirect to login page
-        },
-      },
-    });
-  };
+export default function Navbar({ session = null }) {
+  const path = usePathname();
+  console.log(path);
+  if (path && path.includes("/dashboard")) {
+    return null; // Don't render the navbar on dashboard pages
+  }
 
   const links = [
     {
@@ -59,11 +48,8 @@ export default function Navbar({ session = null, currentPath = null }) {
         <ul className="flex items-center gap-8 text-sm font-medium text-gray-600">
           {links.map((link) => (
             <li
-              key={link.url}
-              className={
-                isActive(link.url) +
-                " *:hover:text-primary transition-colors px-1 py-px"
-              }>
+              key={link.label}
+              className={"*:hover:text-primary transition-colors px-1 py-px"}>
               <NavLink
                 href={link.url}
                 activeClass="text-primary border-b-2 border-primary">

@@ -8,3 +8,8 @@ export const getUserSession = async () => {
   console.log(session);
   return session;
 };
+
+export const getUserRole = async () => {
+  const session = await getUserSession();
+  return session?.user?.role || null;
+};
