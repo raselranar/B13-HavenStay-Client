@@ -4,18 +4,19 @@ import { Button } from "./button";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Card } from "./card";
+import Link from "next/link";
 
 const MotionCard = motion(Card);
-const PropertiesCard = ({ property, idx }) => {
+const PropertiesCard = ({ property, idx, hideButton = null }) => {
   const router = useRouter();
 
-  const handleDetailsRedirect = (id) => {
-    if (!session) {
-      router.push("/login");
-    } else {
-      router.push(`/properties/${id}`);
-    }
-  };
+  //   const handleDetailsRedirect = (id) => {
+  //     if (!session) {
+  //       router.push("/login");
+  //     } else {
+  //       router.push(`/properties/${id}`);
+  //     }
+  //   };
 
   return (
     <MotionCard
@@ -58,9 +59,10 @@ const PropertiesCard = ({ property, idx }) => {
         </div>
 
         <Button
-          className="py-4 text-sm"
-          onClick={() => handleDetailsRedirect(property._id)}>
-          View Details
+          className={"py-4 text-sm" + (hideButton ? " hidden" : "")}
+          onClick={() => handleDetailsRedirect(property._id)}
+          asChild>
+          <Link href={`/properties/${property._id}`}>View Details</Link>
         </Button>
       </div>
     </MotionCard>

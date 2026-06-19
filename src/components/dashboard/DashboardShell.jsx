@@ -46,7 +46,7 @@ export default function DashboardShell({ children, role = null }) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen bg-[#fcfdff] flex flex-1 text-gray-900 font-sans">
+      <div className="min-h-screen bg-background flex flex-1 text-gray-900 font-sans">
         {/* Sidebar Trigger for small screens */}
         <div className="fixed top-4 left-4 z-50 lg:hidden">
           <SidebarTrigger />

@@ -28,7 +28,7 @@ export default function CustomerReviews() {
 
   return (
     <section className="py-16 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-6 text-center mb-10">
+      <div className="max-w-7xl mx-auto px-6 mb-10">
         <h2 className="text-3xl font-semibold text-slate-900">
           Customer Reviews
         </h2>

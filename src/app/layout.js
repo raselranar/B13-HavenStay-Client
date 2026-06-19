@@ -27,7 +27,7 @@ export default async function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <Navbar session={session?.user} />
         <TooltipProvider>
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 bg-background">{children}</main>
         </TooltipProvider>
         <Toaster />
 
