@@ -1,16 +1,12 @@
 // src/components/Navbar.jsx
-"use client";
-import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
+import NavLink from "./ui/NavLink";
 
-export default function Navbar() {
-  const { data: session, isPending } = useSession();
-  const path = usePathname();
-
+export default function Navbar({ session = null, currentPath = null }) {
   const isActive = (url) => {
-    return path === url
+    if (!currentPath) return "text-gray-600";
+    return currentPath === url
       ? "text-primary border-b-2 border-primary"
       : "text-gray-600";
   };
@@ -49,29 +45,25 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <ul className="flex items-center gap-8 text-sm font-medium text-gray-600">
-          {/* <Link href="/" className="hover:text-blue-600 transition-colors">
-            Home
-          </Link>
-          <Link
-            href=
-            className="hover:text-blue-600 transition-colors">
-            All Properties
-          </Link> */}
-          {links.map((links) => (
+          {links.map((link) => (
             <li
-              key={links.url}
+              key={link.url}
               className={
-                isActive(links.url) +
+                isActive(link.url) +
                 " *:hover:text-primary transition-colors px-1 py-px"
               }>
-              <Link href={links.url}>{links.label}</Link>
+              <NavLink
+                href={link.url}
+                activeClass="text-primary border-b-2 border-primary">
+                {link.label}
+              </NavLink>
             </li>
           ))}
         </ul>
 
         {/* Authentication Actions */}
         <div className="flex items-center gap-4">
-          {!isPending && !session ? (
+          {!session ? (
             <>
               <Button variant="outline" size="lg" asChild>
                 <Link href="/login">Login</Link>
@@ -81,11 +73,11 @@ export default function Navbar() {
               </Button>
             </>
           ) : (
-            <button
-              onClick={() => signOut()}
-              className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors cursor-pointer">
-              Logout
-            </button>
+            <form action="/api/auth/signout" method="post">
+              <Button type="submit" size="lg" variant="destructive">
+                Logout
+              </Button>
+            </form>
           )}
         </div>
       </div>

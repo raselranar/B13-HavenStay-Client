@@ -1,3 +1,5 @@
+"use client";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "./button";
 
 const GoogleAuthButton = () => {
@@ -5,7 +7,6 @@ const GoogleAuthButton = () => {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/",
       });
     } catch (err) {
       console.error("Google login failed:", err);
