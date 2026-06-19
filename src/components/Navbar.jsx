@@ -1,9 +1,8 @@
 "use client";
 import Link from "next/link";
-import { Button } from "./ui/button";
 import NavLink from "./ui/NavLink";
 import AuthButtons from "./ui/AuthButtons";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function Navbar({ session = null }) {
   const path = usePathname();

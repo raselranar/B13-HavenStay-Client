@@ -1,8 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const path = usePathname();
+  console.log(path);
+  if (path && path.includes("/dashboard")) {
+    return null; // Don't render the navbar on dashboard pages
+  }
+
   return (
     <footer className="bg-slate-950 text-gray-300">
       {/* Main Footer Content */}

@@ -24,23 +24,29 @@ import {
   SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar";
+import { Button } from "../ui/button";
 
 export default function DashboardShell({ children, role = null }) {
   const pathname = usePathname();
 
-  const tenantMenuItems = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Bookings", href: "/dashboard/my-bookings", icon: BookOpen },
-    { name: "Messages", href: "/dashboard/messages", icon: MessageSquare },
-    { name: "Favorites", href: "/dashboard/favorites", icon: Heart },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings },
-  ];
+  const AllMenuItems = {
+    tenant: [
+      { name: "Dashboard", href: "/dashboard/tenant", icon: LayoutDashboard },
+      {
+        name: "My Bookings",
+        href: "/dashboard/tenant/my-bookings",
+        icon: BookOpen,
+      },
+      { name: "Favorites", href: "/dashboard/tenant/favorites", icon: Heart },
+      { name: "Settings", href: "/dashboard/tenant/settings", icon: Settings },
+    ],
+  };
 
-  const menuItems = tenantMenuItems;
+  const menuItems = AllMenuItems[role || "tenant"];
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen bg-[#fcfdff] flex text-gray-900 font-sans">
+      <div className="min-h-screen bg-[#fcfdff] flex flex-1 text-gray-900 font-sans">
         {/* Sidebar Trigger for small screens */}
         <div className="fixed top-4 left-4 z-50 lg:hidden">
           <SidebarTrigger />
@@ -62,7 +68,7 @@ export default function DashboardShell({ children, role = null }) {
                   JD
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-gray-900">John Doe</h4>
+                  <h4 className="text-lg font-bold text-gray-900">John Doe</h4>
                   <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
                     Premium Member
                   </p>
@@ -76,20 +82,20 @@ export default function DashboardShell({ children, role = null }) {
                     const Icon = item.icon;
                     return (
                       <SidebarMenuItem key={item.href}>
-                        <Link href={item.href} legacyBehavior passHref>
-                          <a className={`no-underline`}>
-                            <SidebarMenuButton asChild isActive={isActive}>
-                              <div
-                                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide ${
-                                  isActive
-                                    ? "bg-primary text-white shadow-xs"
-                                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                                }`}>
-                                <Icon className="size-4 shrink-0" />
-                                <span>{item.name}</span>
-                              </div>
-                            </SidebarMenuButton>
-                          </a>
+                        <Link href={item.href}>
+                          {console.log(isActive)}
+                          <SidebarMenuButton
+                            asChild
+                            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide ${
+                              isActive
+                                ? "bg-primary text-white shadow-xs hover:bg-primary/80 hover:text-white"
+                                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                            }`}>
+                            <div>
+                              <Icon className="size-4 shrink-0" />
+                              <span>{item.name}</span>
+                            </div>
+                          </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
                     );
@@ -99,23 +105,20 @@ export default function DashboardShell({ children, role = null }) {
 
               <SidebarFooter>
                 <div className="space-y-1 pt-4 border-t border-gray-100">
-                  <Link
-                    href="/help"
-                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-900">
-                    <HelpCircle className="size-4" />
-                    Help
-                  </Link>
-                  <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors text-left cursor-pointer">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="w-full p-4 flex items-center gap-3">
                     <LogOut className="size-4" />
                     Logout
-                  </button>
+                  </Button>
                 </div>
               </SidebarFooter>
             </div>
           </SidebarContent>
         </Sidebar>
 
-        <SidebarInset className="flex-1 w-full lg:overflow-y-auto p-6 lg:p-10 pt-20 lg:pt-10">
+        <SidebarInset className="flex-1 outline w-full lg:overflow-y-auto p-6 lg:p-10 pt-20 lg:pt-10">
           {children}
         </SidebarInset>
       </div>
