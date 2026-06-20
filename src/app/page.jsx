@@ -12,7 +12,6 @@ import RecentlyAddedProperties from "@/components/home/RecentlyAddedProperties";
 export default async function Home() {
   const featuredProperties = await serverFetch("/api/properties/featured");
   const recentProperties = await serverFetch("/api/properties/recent");
-  console.log(featuredProperties);
   return (
     <section className="min-h-screen bg-white ">
       <Banner />

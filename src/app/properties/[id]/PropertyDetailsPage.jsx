@@ -17,8 +17,9 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
+import { serverMutate } from "@/lib/core/server";
 
-export default function PropertyDetailsPage({ propertyData }) {
+export default function PropertyDetailsPage({ propertyData, userId }) {
   const [activeImage, setActiveImage] = useState(propertyData.images[0]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -44,8 +45,17 @@ export default function PropertyDetailsPage({ propertyData }) {
   ]);
 
   const handleAddToFavorites = async () => {
-    setIsFavorite(!isFavorite);
-    // Dynamic database injection hook triggers here
+    const addToFavorite = await serverMutate(
+      "/api/properties/favorites",
+      "POST",
+      {
+        userId,
+        propertyId: propertyData._id,
+      },
+    );
+    if (addToFavorite?.insertedId) {
+      setIsFavorite(!isFavorite);
+    }
   };
 
   const onBookingSubmit = async (data) => {
