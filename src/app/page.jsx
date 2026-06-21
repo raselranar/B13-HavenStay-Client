@@ -5,13 +5,13 @@ import FeaturedProperties from "@/components/home/FeaturedProperties";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import PopularCities from "@/components/home/PopularCities";
 import CustomerReviews from "@/components/home/CustomerReviews";
-import { serverFetch } from "@/lib/core/server";
+import { protectedFetch } from "@/lib/core/server";
 import RecentlyAddedProperties from "@/components/home/RecentlyAddedProperties";
 // import Footer from "@/components/Footer";
 
 export default async function Home() {
-  const featuredProperties = await serverFetch("/api/properties/featured");
-  const recentProperties = await serverFetch("/api/properties/recent");
+  const featuredProperties = await protectedFetch("/api/properties/featured");
+  const recentProperties = await protectedFetch("/api/properties/recent");
   return (
     <section className="min-h-screen bg-white ">
       <Banner />

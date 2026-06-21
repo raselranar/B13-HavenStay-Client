@@ -13,3 +13,16 @@ export const getUserRole = async () => {
   const session = await getUserSession();
   return session?.user?.role || null;
 };
+
+export const getUserToken = async () => {
+  const result = await auth.api.getToken({
+    headers: await headers(),
+  });
+  return result?.token || null;
+};
+
+export const authHeaders = async () => {
+  const token = await getUserToken();
+  const header = token ? { authorization: `Bearer ${token}` } : {};
+  return header;
+};

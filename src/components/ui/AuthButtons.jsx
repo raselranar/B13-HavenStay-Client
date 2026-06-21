@@ -13,6 +13,7 @@ export default function AuthButtons({ session }) {
         onSuccess: () => {
           toast.info("Logged out successfully");
           router.push("/login");
+          router.refresh();
         },
       },
     });
