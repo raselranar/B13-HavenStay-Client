@@ -1,32 +1,26 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { motion } from "framer-motion";
-import Image from "next/image";
 import PropertiesCard from "@/components/ui/PropertiesCard";
+import FilterProperties from "./filterProperties";
 
-export default function PropertiesPage({ properties: initialProperties }) {
+export default function PropertiesPage({ properties }) {
   const router = useRouter();
-  const [properties, setProperties] = useState(
-    // accept either { items, total } or plain array
-    initialProperties?.items ?? initialProperties ?? [],
-  );
+
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("All Cities");
-  const [typeFilter, setTypeFilter] = useState("All Types");
-  const [sortBy, setSortBy] = useState("price_asc");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [sortBy, setSortBy] = useState("");
   const [page, setPage] = useState(1);
   const pageSize = 9;
   const [totalPages, setTotalPages] = useState(
     Math.max(
       1,
       Math.ceil(
-        (initialProperties?.total ??
-          initialProperties?.length ??
-          properties.length) / pageSize,
+        (properties?.total ?? properties?.length ?? properties.length) /
+          pageSize,
       ),
     ),
   );
@@ -58,78 +52,6 @@ export default function PropertiesPage({ properties: initialProperties }) {
     router.push(`/properties/${id}`);
   };
 
-  // Fetch from API with filters and pagination
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchProps = async () => {
-      setLoading(true);
-      try {
-        const params = {
-          q: query || undefined,
-          city: locationFilter !== "All Cities" ? locationFilter : undefined,
-          type: typeFilter !== "All Types" ? typeFilter : undefined,
-          sort: sortBy,
-          page,
-          pageSize,
-        };
-
-        const res = await axios.get("/api/properties", {
-          params,
-          signal: controller.signal,
-        });
-
-        // Support both { items, total } and plain arrays
-        if (res.data?.items) {
-          setProperties(res.data.items);
-          setTotalPages(
-            Math.max(
-              1,
-              Math.ceil(
-                (res.data.total || res.data.count || res.data.items.length) /
-                  pageSize,
-              ),
-            ),
-          );
-        } else if (Array.isArray(res.data)) {
-          setProperties(res.data);
-          setTotalPages(Math.max(1, Math.ceil(res.data.length / pageSize)));
-        } else {
-          // unknown shape — try to read .data
-          setProperties(
-            res.data?.data ??
-              sampleProperties.slice((page - 1) * pageSize, page * pageSize),
-          );
-          setTotalPages(
-            Math.max(
-              1,
-              Math.ceil(
-                (res.data?.total ?? sampleProperties.length) / pageSize,
-              ),
-            ),
-          );
-        }
-      } catch (err) {
-        // fallback to sample data on error
-        const items = sampleProperties.slice(
-          (page - 1) * pageSize,
-          page * pageSize,
-        );
-        setProperties(items);
-        setTotalPages(
-          Math.max(1, Math.ceil(sampleProperties.length / pageSize)),
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProps();
-
-    return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, locationFilter, typeFilter, sortBy, page]);
-
   return (
     <main className="min-h-screen bg-background py-12">
       <div className="max-w-7xl mx-auto px-6">
@@ -141,68 +63,19 @@ export default function PropertiesPage({ properties: initialProperties }) {
           </p>
         </div>
 
-        <div className="mb-8 grid grid-cols-1 lg:grid-cols-[1fr,240px] gap-4 items-center">
-          <div className="flex gap-4">
-            <input
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search by city, neighborhood, or building..."
-              className="flex-1 border rounded-xl px-4 py-3 shadow-sm"
-            />
-            <button
-              onClick={() => {
-                setQuery("");
-                setPage(1);
-              }}
-              className="px-4 py-3 rounded-xl bg-gray-100">
-              Clear
-            </button>
-          </div>
-
-          <div className="flex gap-3 justify-end items-center">
-            <select
-              value={locationFilter}
-              onChange={(e) => {
-                setLocationFilter(e.target.value);
-                setPage(1);
-              }}
-              className="border rounded-xl px-3 py-2">
-              <option>All Cities</option>
-              <option>Dhaka</option>
-              <option>Khulna</option>
-              <option>Chattogram</option>
-            </select>
-            <select
-              value={typeFilter}
-              onChange={(e) => {
-                setTypeFilter(e.target.value);
-                setPage(1);
-              }}
-              className="border rounded-xl px-3 py-2">
-              <option>All Types</option>
-              <option>Apartment</option>
-              <option>Villa</option>
-              <option>Loft</option>
-            </select>
-            <select
-              value={sortBy}
-              onChange={(e) => {
-                setSortBy(e.target.value);
-                setPage(1);
-              }}
-              className="border rounded-xl px-3 py-2">
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-            </select>
-          </div>
-        </div>
+        <FilterProperties
+          query={query}
+          setQuery={setQuery}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          setPage={setPage}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading ? (
-            <div className="col-span-3 text-center py-20">Loading…</div>
+            <div className="col-span-3 h-125 text-center py-20">Loading…</div>
           ) : visible.length === 0 ? (
             <div className="col-span-3 text-center py-20">
               No properties found.
