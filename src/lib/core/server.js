@@ -1,6 +1,6 @@
 "use server";
 import axios from "axios";
-import { authHeaders } from "./session";
+import { authHeaders, getUserSession } from "./session";
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const protectedFetch = async (path) => {
   const url = `${baseUrl}${path}`;
@@ -29,6 +29,9 @@ export const serverFetch = async (path) => {
 
 export const serverMutate = async (path, method = "POST", data = {}) => {
   const url = `${baseUrl}${path}`;
+  if (!data.userId) {
+    data.user = await getUserSession();
+  }
   try {
     const response = await axios({
       method,

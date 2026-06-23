@@ -19,6 +19,8 @@ import {
 import Image from "next/image";
 import { serverMutate } from "@/lib/core/server";
 import axios from "axios";
+import { toast } from "sonner";
+import { timeFormat } from "@/lib/utils";
 
 export default function PropertyDetailsPage({ propertyData, userId }) {
   // Directly initializing state using property data arrays
@@ -46,24 +48,11 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
   } = useForm();
 
   // Dynamic review mock instances fulfilling standard display formatting rules
-  const [reviews, setReviews] = useState(
-    propertyData?.reviews?.length
-      ? propertyData.reviews
-      : [
-          {
-            name: "David Mitchell",
-            email: "david@example.com",
-            date: "June 14, 2026",
-            rating: 5,
-            comment:
-              "Absolutely breathtaking views. The private elevator and pool setup executed flawlessly.",
-          },
-        ],
-  );
+  const [reviews, setReviews] = useState(propertyData.reviews || []);
 
   const handleAddToFavorites = async () => {
     if (!userId) {
-      alert("Please log in to add properties to your favorites.");
+      toast.info("Please log in to add properties to your favorites.");
       return;
     }
 
@@ -106,7 +95,7 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
       const url = res?.data?.url;
       if (!url) {
         console.error("Stripe session URL missing", res.data);
-        alert("Unable to start payment. Please try again.");
+        toast.error("Unable to start payment. Please try again.");
         return;
       }
 
@@ -114,7 +103,7 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
       window.location.assign(url);
     } catch (err) {
       console.error("Stripe Checkout Redirection Error:", err);
-      alert(err.response?.data?.error || "Transaction routing failed.");
+      toast.error(err.response?.data?.error || "Transaction routing failed.");
     } finally {
       setIsSubmittingBooking(false);
     }
@@ -122,44 +111,28 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
 
   const onReviewSubmit = async (data) => {
     if (!userId) {
-      alert("Please log in to submit a review.");
+      toast.error("Please log in to submit a review.");
       return;
     }
 
     setIsSubmittingReview(true);
     try {
-      const response = await serverMutate(
-        "/api/properties/reviews",
-        "POST",
-        {
-          propertyId: propertyData?._id,
-          rating: reviewRating,
-          comment: data.comment,
-        },
-      );
-
+      const response = await serverMutate("/api/properties/reviews", "POST", {
+        propertyId: propertyData?._id,
+        rating: reviewRating,
+        comment: data.comment,
+      });
+      console.log(response);
       if (!response?.review) {
         throw new Error("Review submission failed.");
       }
 
-      const newReview = {
-        name: response.review.reviewerName || "Tenant",
-        email: response.review.reviewerEmail || "",
-        rating: response.review.rating,
-        comment: response.review.comment,
-        date: new Date().toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }),
-      };
-
-      setReviews((current) => [newReview, ...current]);
+      setReviews((current) => [response, ...current]);
       resetReview();
       setReviewRating(5);
     } catch (error) {
       console.error("Review submission error:", error);
-      alert(error?.message || "Unable to submit review.");
+      toast.error(error?.message || "Unable to submit review.");
     } finally {
       setIsSubmittingReview(false);
     }
@@ -329,7 +302,9 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
                 Share your experience
               </h4>
               {userId ? (
-                <form onSubmit={handleSubmitReview(onReviewSubmit)} className="space-y-4 mt-4">
+                <form
+                  onSubmit={handleSubmitReview(onReviewSubmit)}
+                  className="space-y-4 mt-4">
                   <div className="space-y-2">
                     <label className="block text-xs font-bold uppercase tracking-wider text-gray-500">
                       Your Rating
@@ -378,7 +353,9 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
                     type="submit"
                     disabled={isSubmittingReview}
                     className="inline-flex items-center justify-center rounded-2xl bg-primary px-4 py-2 text-xs font-bold uppercase text-white transition-colors disabled:bg-indigo-300">
-                    {isSubmittingReview ? "Submitting review..." : "Submit Review"}
+                    {isSubmittingReview
+                      ? "Submitting review..."
+                      : "Submit Review"}
                   </button>
                 </form>
               ) : (
@@ -394,32 +371,34 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
                   There are no reviews for this property yet.
                 </p>
               ) : (
-                reviews.map((rev, i) => (
-                  <div
-                    key={i}
-                    className="bg-white border border-gray-100 p-5 rounded-2xl shadow-xs space-y-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h5 className="text-xs font-bold text-gray-900">
-                          {rev.name}
-                        </h5>
-                        <span className="text-xs text-gray-400 font-medium">
-                          {rev.email}
-                          {rev.email ? " • " : ""}
-                          {rev.date}
-                        </span>
+                reviews
+                  .sort((a, b) => new Date(b.date) - new Date(a.date))
+                  .map((rev, i) => (
+                    <div
+                      key={i}
+                      className="bg-white border border-gray-100 p-5 rounded-2xl shadow-xs space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h5 className="text-xs font-bold text-gray-900">
+                            {rev.reviewerName}
+                          </h5>
+                          <span className="text-xs text-gray-400 font-medium">
+                            {rev.reviewerEmail}
+                            {rev.reviewerEmail ? " • " : ""}
+                            {timeFormat(rev.date)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-0.5 text-amber-400">
+                          {[...Array(rev.rating)].map((_, idx) => (
+                            <Star key={idx} className="size-3.5 fill-current" />
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-0.5 text-amber-400">
-                        {[...Array(rev.rating)].map((_, idx) => (
-                          <Star key={idx} className="size-3.5 fill-current" />
-                        ))}
-                      </div>
+                      <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                        {rev.comment}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                      {rev.comment}
-                    </p>
-                  </div>
-                ))
+                  ))
               )}
             </div>
           </div>

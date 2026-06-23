@@ -6,6 +6,7 @@ import { getUserSession } from "@/lib/core/session";
 export const generateMetadata = async ({ params }) => {
   const { id } = await params;
   const property = await protectedFetch(`/api/properties/details/${id}`);
+  console.log(property);
 
   return {
     title: property.title,
