@@ -1,8 +1,8 @@
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import { getUserRole } from "@/lib/core/session";
+import { getUserRole, getUserSession } from "@/lib/core/session";
 
 export default async function DashboardLayout({ children }) {
-  const role = await getUserRole();
-
-  return <DashboardShell role={role}>{children}</DashboardShell>;
+  const session = await getUserSession();
+  const user = session?.user;
+  return <DashboardShell user={user}>{children}</DashboardShell>;
 }

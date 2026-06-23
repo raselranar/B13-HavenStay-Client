@@ -8,11 +8,11 @@ export default function DashboardError({ error, reset }) {
   return (
     <DashboardShell>
       <main className="min-h-[60vh] flex items-center justify-center p-6">
-        <div className="max-w-lg w-full bg-white rounded-2xl shadow p-8 text-center">
+        <div className="w-full bg-white rounded-2xl shadow p-8 text-center">
           <h2 className="text-2xl font-semibold mb-2">Dashboard error</h2>
           <p className="text-sm text-gray-500 mb-6">
-            We couldn't load this dashboard section. You can retry or return to
-            the dashboard home.
+            We couldn&apos;t load this dashboard section. You can retry or
+            return to the dashboard home.
           </p>
 
           <div className="flex items-center justify-center gap-3">

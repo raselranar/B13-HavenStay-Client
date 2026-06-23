@@ -5,11 +5,10 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   BookOpen,
-  MessageSquare,
   Heart,
   Settings,
-  HelpCircle,
   LogOut,
+  ArrowLeft,
 } from "lucide-react";
 
 import {
@@ -25,9 +24,12 @@ import {
   SidebarInset,
 } from "@/components/ui/sidebar";
 import { Button } from "../ui/button";
+import { avatarName } from "@/app/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-export default function DashboardShell({ children, role = null }) {
+export default function DashboardShell({ children, user = null }) {
   const pathname = usePathname();
+  const role = user?.role;
 
   const AllMenuItems = {
     tenant: [
@@ -57,18 +59,23 @@ export default function DashboardShell({ children, role = null }) {
             <div className="p-4 flex flex-col gap-6 h-full">
               <SidebarHeader>
                 <div className="flex items-center gap-2 px-2">
-                  <span className="text-xl font-bold text-primary tracking-tight">
-                    HavenStay
-                  </span>
+                  <Link
+                    href="/"
+                    className="text-xl flex items-center gap-2 font-bold text-primary tracking-tight">
+                    <ArrowLeft /> Back To Home
+                  </Link>
                 </div>
               </SidebarHeader>
 
               <div className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-xl border border-gray-100/60">
-                <div className="size-10 bg-primary text-white font-bold rounded-full flex items-center justify-center text-sm">
-                  JD
-                </div>
+                <Avatar>
+                  <AvatarImage src={user?.image} />
+                  <AvatarFallback>{avatarName(user?.name)}</AvatarFallback>
+                </Avatar>
                 <div>
-                  <h4 className="text-lg font-bold text-gray-900">John Doe</h4>
+                  <h4 className="text-lg font-bold text-gray-900">
+                    {user?.name}
+                  </h4>
                   <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
                     Premium Member
                   </p>

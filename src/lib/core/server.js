@@ -5,7 +5,6 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const protectedFetch = async (path) => {
   const url = `${baseUrl}${path}`;
   console.log(url);
-  console.log({ url, headers: await authHeaders() });
   try {
     const response = await axios.get(url, {
       headers: await authHeaders(),

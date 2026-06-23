@@ -15,16 +15,16 @@ export const generateMetadata = async ({ params }) => {
 
 const page = async ({ params }) => {
   const { id } = await params;
-  const property = await protectedFetch(`/api/properties/details/${id}`);
   const session = await getUserSession();
-  console.log(session?.session?.userId);
+  const userId = session?.session?.userId;
+  const property = await protectedFetch(
+    `/api/properties/details/${id}?userId=${userId}`,
+  );
+  console.log(userId);
+  console.log(property);
 
   return (
-    <PropertyDetailsPage
-      id={id}
-      propertyData={property}
-      userId={session?.session?.userId}
-    />
+    <PropertyDetailsPage id={id} propertyData={property} userId={userId} />
   );
 };
 export default page;

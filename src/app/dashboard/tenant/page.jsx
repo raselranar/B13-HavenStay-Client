@@ -1,10 +1,12 @@
-// src/app/dashboard/page.js
-"use client";
+import { getUserSession } from "@/lib/core/session";
 import { ArrowUpRight, Heart, Calendar, CreditCard } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function TenantDashboard() {
+export default async function TenantDashboard() {
+  const session = await getUserSession();
+  const user = session?.user;
+
   // Mock data arrays matching database entries for real-time visualization mapping
   const analyticsData = [
     {
@@ -31,11 +33,11 @@ export default function TenantDashboard() {
   ];
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto">
+    <div className="space-y-10 ">
       {/* Dynamic Salutation Heading Area */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Good Morning, John
+          Good Morning, {user?.name}
         </h1>
         <p className="text-gray-500 mt-0.5">
           Manage your upcoming stays and favorite destinations.
