@@ -20,6 +20,10 @@ export default function FilterProperties({
   setPage,
   typeFilter,
   setTypeFilter,
+  minPrice,
+  setMinPrice,
+  maxPrice,
+  setMaxPrice,
 }) {
   const router = useRouter();
 
@@ -28,8 +32,10 @@ export default function FilterProperties({
     if (query) params.set("search", query);
     if (sortBy) params.set("sort", sortBy);
     if (typeFilter) params.set("type", typeFilter);
+    if (minPrice) params.set("minPrice", minPrice);
+    if (maxPrice) params.set("maxPrice", maxPrice);
     router.push(`/properties?${params.toString()}`);
-  }, [query, sortBy, typeFilter]);
+  }, [query, sortBy, typeFilter, minPrice, maxPrice]);
 
   return (
     <div className="mb-8 flex flex-wrap gap-4 justify-center items-center">
@@ -65,6 +71,32 @@ export default function FilterProperties({
             </SelectGroup>
           </SelectContent>
         </Select>
+
+        {/* min price */}
+        <Input
+          type="number"
+          value={minPrice}
+          onChange={(e) => {
+            setMinPrice(e.target.value);
+            setPage(1);
+          }}
+          className="px-3 py-2 h-fit"
+          placeholder="Min Price"
+        />
+
+        {/* max price */}
+        <Input
+          type="number"
+          value={maxPrice}
+          onChange={(e) => {
+            setMaxPrice(e.target.value);
+            setPage(1);
+          }}
+          className="px-3 py-2 h-fit"
+          placeholder="Max Price"
+        />
+
+        {/* sort by price */}
         <Select
           value={sortBy}
           onValueChange={(value) => {
@@ -87,6 +119,10 @@ export default function FilterProperties({
       <button
         onClick={() => {
           setQuery("");
+          setSortBy("");
+          setTypeFilter("");
+          setMinPrice("");
+          setMaxPrice("");
           setPage(1);
         }}
         className="px-4 py-3 rounded-xl bg-gray-100">

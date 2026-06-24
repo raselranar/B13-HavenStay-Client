@@ -21,8 +21,10 @@ import { serverMutate } from "@/lib/core/server";
 import axios from "axios";
 import { toast } from "sonner";
 import { timeFormat } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function PropertyDetailsPage({ propertyData, userId }) {
+  const router = useRouter();
   // Directly initializing state using property data arrays
   const [activeImage, setActiveImage] = useState(propertyData?.images?.[0]);
   const [isFavorite, setIsFavorite] = useState(
@@ -100,7 +102,7 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
       }
 
       setBookingModalOpen(false);
-      window.location.assign(url);
+      router.push(url);
     } catch (err) {
       console.error("Stripe Checkout Redirection Error:", err);
       toast.error(err.response?.data?.error || "Transaction routing failed.");

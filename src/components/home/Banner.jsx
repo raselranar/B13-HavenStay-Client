@@ -1,22 +1,32 @@
 // src/components/Banner.jsx
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Search, MapPin, Home, DollarSign } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 export default function Banner() {
   const router = useRouter();
-  const [search, setSearch] = useState({
-    location: "",
-    type: "",
-    minPrice: "",
-    maxPrice: "",
-  });
 
   const handleSearch = (e) => {
+    console.log(e);
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const rawEntries = Object.fromEntries(formData.entries());
+    const search = Object.fromEntries(
+      Object.entries(rawEntries).filter(([_, value]) => value !== ""),
+    );
     const query = new URLSearchParams(search).toString();
     router.push(`/properties?${query}`);
   };
@@ -55,48 +65,52 @@ export default function Banner() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           onSubmit={handleSearch}
-          className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl text-gray-800 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-          <div className="flex items-center gap-2 border-r border-gray-200 px-2 last:border-0">
-            <MapPin className="text-gray-400 size-5 shrink-0" />
-            <input
-              type="text"
-              placeholder="Where to?"
-              className="w-full text-sm outline-none bg-transparent"
-              onChange={(e) =>
-                setSearch({ ...search, location: e.target.value })
-              }
-            />
-          </div>
+          className="bg-gray-300/85 backdrop-blur-md p-4 rounded-2xl shadow-xl text-gray-800  items-center">
+          <div className="flex flex-wrap gap-4 justify-center items-center">
+            <div className="flex gap-4 flex-1">
+              <Input
+                className="px-3 py-2 h-fit"
+                placeholder="Search by location"
+                name="search"
+              />
+            </div>
 
-          <div className="flex items-center gap-2 border-r border-gray-200 px-2 last:border-0">
-            <Home className="text-gray-400 size-5 shrink-0" />
-            <select
-              className="w-full text-sm outline-none bg-transparent text-gray-500"
-              onChange={(e) => setSearch({ ...search, type: e.target.value })}>
-              <option value="">All Types</option>
-              <option value="Apartment">Apartment</option>
-              <option value="Villa">Villa</option>
-              <option value="Penthouse">Penthouse</option>
-            </select>
-          </div>
+            <div className="flex gap-3 justify-end items-center">
+              <Select name="type">
+                <SelectTrigger size="md">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Property Type</SelectLabel>
+                    <SelectItem value="">All Types</SelectItem>
+                    <SelectItem value="Apartment">Apartment</SelectItem>
+                    <SelectItem value="Villa">Villa</SelectItem>
+                    <SelectItem value="Penthouse">Penthouse</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
 
-          <div className="flex items-center gap-2 px-2">
-            <DollarSign className="text-gray-400 size-5 shrink-0" />
-            <input
-              type="number"
-              placeholder="Max Price"
-              className="w-full text-sm outline-none bg-transparent"
-              onChange={(e) =>
-                setSearch({ ...search, maxPrice: e.target.value })
-              }
-            />
-          </div>
+              {/* min price */}
+              <Input
+                type="number"
+                name="minPrice"
+                className="px-3 py-2 h-fit"
+                placeholder="Min Price"
+              />
 
-          <button
-            type="submit"
-            className="w-full bg-primary hover:bg-primary/80 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer">
-            <Search className="size-4" /> Search
-          </button>
+              {/* max price */}
+              <Input
+                type="number"
+                name="maxPrice"
+                className="px-3 py-2 h-fit"
+                placeholder="Max Price"
+              />
+            </div>
+            <Button size="lg" type="submit" className="bg-primary">
+              <Search className="size-4" /> Search
+            </Button>
+          </div>
         </motion.form>
       </div>
     </section>

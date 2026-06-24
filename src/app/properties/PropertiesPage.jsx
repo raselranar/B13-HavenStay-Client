@@ -5,14 +5,16 @@ import axios from "axios";
 import PropertiesCard from "@/components/ui/PropertiesCard";
 import FilterProperties from "./filterProperties";
 
-export default function PropertiesPage({ properties }) {
+export default function PropertiesPage({ properties, filter }) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState("");
-  const [locationFilter, setLocationFilter] = useState("All Cities");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [sortBy, setSortBy] = useState("");
+  const [query, setQuery] = useState(filter.search || "");
+
+  const [typeFilter, setTypeFilter] = useState(filter.type || "");
+  const [sortBy, setSortBy] = useState(filter.sort || "");
+  const [minPrice, setMinPrice] = useState(filter.minPrice || "");
+  const [maxPrice, setMaxPrice] = useState(filter.maxPrice || "");
   const [page, setPage] = useState(1);
   const pageSize = 9;
   const [totalPages, setTotalPages] = useState(
@@ -25,27 +27,6 @@ export default function PropertiesPage({ properties }) {
     ),
   );
 
-  // useEffect(() => {
-  //   let cancelled = false;
-  //   setLoading(true);
-  //   axios
-  //     .get("/api/properties")
-  //     .then((res) => {
-  //       if (cancelled) return;
-  //       setProperties(res.data || sampleProperties);
-  //     })
-  //     .catch(() => {
-  //       setProperties(sampleProperties);
-  //     })
-  //     .finally(() => setLoading(false));
-
-  //   return () => {
-  //     cancelled = true;
-  //   };
-  // }, []);
-
-  // visible items come from API (already paginated) — stored in `properties`.
-  // When API is not available we fall back to client-side sample data.
   const visible = properties;
 
   const handleDetails = (id) => {
@@ -71,6 +52,10 @@ export default function PropertiesPage({ properties }) {
           sortBy={sortBy}
           setSortBy={setSortBy}
           setPage={setPage}
+          minPrice={minPrice}
+          setMinPrice={setMinPrice}
+          maxPrice={maxPrice}
+          setMaxPrice={setMaxPrice}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
