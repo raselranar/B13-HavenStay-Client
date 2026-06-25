@@ -5,35 +5,6 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 const FavoritesTable = dynamic(() => import("./FavoritesTable.client"));
 
-const favoritesPreview = [
-  {
-    name: "Coastal Retreat",
-    location: "Malibu, California",
-    price: "$245",
-    beds: 3,
-    baths: 2,
-    sqft: 1200,
-    img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=500&q=80",
-  },
-  {
-    name: "Pine Forest Cabin",
-    location: "Aspen, Colorado",
-    price: "$180",
-    beds: 2,
-    baths: 1,
-    sqft: 850,
-    img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=500&q=80",
-  },
-  {
-    name: "Modern City Loft",
-    location: "Brooklyn, New York",
-    price: "$310",
-    beds: 1,
-    baths: 1,
-    sqft: 728,
-    img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=500&q=80",
-  },
-];
 // meta data
 export const metadata = {
   title: "My Favorites",

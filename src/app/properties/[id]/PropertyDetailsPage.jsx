@@ -170,7 +170,8 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
             isFavorite
               ? "bg-rose-50 border-rose-200 text-rose-600 shadow-xs"
               : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
-          }`}>
+          }`}
+          disabled={isFavorite}>
           <Heart className={`size-4 ${isFavorite ? "fill-current" : ""}`} />
           {isFavorite ? "Added to Favorites" : "Save to Favorites"}
         </button>

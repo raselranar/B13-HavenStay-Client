@@ -6,9 +6,9 @@ import {
   LayoutDashboard,
   BookOpen,
   Heart,
-  Settings,
   LogOut,
   ArrowLeft,
+  User,
 } from "lucide-react";
 
 import {
@@ -40,7 +40,7 @@ export default function DashboardShell({ children, user = null }) {
         icon: BookOpen,
       },
       { name: "Favorites", href: "/dashboard/tenant/favorites", icon: Heart },
-      { name: "Settings", href: "/dashboard/tenant/settings", icon: Settings },
+      { name: "Profile", href: "/dashboard/tenant/profile", icon: User },
     ],
   };
 
