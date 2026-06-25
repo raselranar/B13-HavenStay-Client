@@ -125,7 +125,7 @@ export default function DashboardShell({ children, user = null }) {
           </SidebarContent>
         </Sidebar>
 
-        <SidebarInset className="flex-1 outline w-full lg:overflow-y-auto p-6 lg:p-10 pt-20 lg:pt-10">
+        <SidebarInset className="flex-1 w-full lg:overflow-y-auto p-6 lg:p-10 pt-20 lg:pt-10">
           {children}
         </SidebarInset>
       </div>

@@ -1,27 +1,13 @@
-import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
+import { protectedFetch } from "@/lib/core/server";
+import { timeFormat } from "@/lib/utils";
 
-const MyBookingPage = () => {
-  const recentBookings = [
-    {
-      name: "Skyline Penthouse",
-      date: "Oct 12 - Oct 15, 2024",
-      amount: "$1,200.00",
-      status: "Approved",
-    },
-    {
-      name: "Modern Lake Cabin",
-      date: "Nov 02 - Nov 08, 2024",
-      amount: "$850.00",
-      status: "Pending",
-    },
-    {
-      name: "Urban Loft Studio",
-      date: "Dec 20 - Dec 24, 2024",
-      amount: "$450.00",
-      status: "Rejected",
-    },
-  ];
+export const metadata = {
+  title: "My Bookings",
+};
+
+const MyBookingPage = async () => {
+  const bookings = await protectedFetch("/api/properties/bookings");
+  console.log(bookings);
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl shadow-xs p-6">
@@ -38,29 +24,44 @@ const MyBookingPage = () => {
               <th className="py-3 px-4">Property Name</th>
               <th className="py-3 px-4">Date</th>
               <th className="py-3 px-4">Amount Paid</th>
-              <th className="py-3 px-4 text-center">Status</th>
+              <th className="py-3 px-4 text-center">Payment Status</th>
+              <th className="py-3 px-4 text-center">Booking Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50 text-xs font-medium text-gray-700">
-            {recentBookings.map((row, idx) => (
+            {bookings.map((row, idx) => (
               <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
                 <td className="py-3.5 px-4 font-bold text-gray-900">
-                  {row.name}
+                  {row.title}
                 </td>
-                <td className="py-3.5 px-4 text-gray-500">{row.date}</td>
+                <td className="py-3.5 px-4 text-gray-500">
+                  {timeFormat(row.createdAt)}
+                </td>
                 <td className="py-3.5 px-4 font-semibold text-gray-900">
-                  {row.amount}
+                  {row.rent}
                 </td>
                 <td className="py-3.5 px-4 text-center">
                   <span
-                    className={`inline-block px-2.5 py-1 rounded-full text-xs font-bold ${
-                      row.status === "Approved"
-                        ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
-                        : row.status === "Pending"
-                          ? "bg-amber-50 text-amber-600 border border-amber-100"
-                          : "bg-red-50 text-red-600 border border-red-100"
+                    className={`px-2.5 py-1 capitalize font-bold ${
+                      row.paymentStatus.toLowerCase() === "approved"
+                        ? " text-emerald-600 border "
+                        : row.paymentStatus === "pending"
+                          ? " text-amber-600 "
+                          : " text-red-600 "
                     }`}>
-                    {row.status}
+                    {row.paymentStatus}
+                  </span>
+                </td>
+                <td className="py-3.5 px-4 text-center">
+                  <span
+                    className={`capitalize px-2.5 py-1 ${
+                      row.bookingStatus.toLowerCase() === "approved"
+                        ? " text-emerald-600 "
+                        : row.bookingStatus === "pending"
+                          ? " text-amber-600 "
+                          : " text-red-600 "
+                    }`}>
+                    {row.bookingStatus}
                   </span>
                 </td>
               </tr>

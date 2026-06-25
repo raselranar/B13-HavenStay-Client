@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import { useRouter } from "next/navigation";
 
 export default function DashboardError({ error, reset }) {
+  const router = useRouter();
   console.error(error);
 
   return (
@@ -17,7 +19,7 @@ export default function DashboardError({ error, reset }) {
 
           <div className="flex items-center justify-center gap-3">
             <button
-              onClick={() => reset?.()}
+              onClick={() => router.refresh()}
               className="px-4 py-2 rounded-lg bg-primary text-white">
               Retry
             </button>

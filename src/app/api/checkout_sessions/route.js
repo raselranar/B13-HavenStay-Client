@@ -52,14 +52,11 @@ export async function POST(request) {
       },
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
     });
-
-    // 3. OPTIONAL: Save a pending status record locally via your server mutations if needed
-    /*
-    await serverMutate("/api/properties/bookings", "POST", {
-      ...body,
-      status: "Pending",
-    });
-    */
+    console.log(session);
+    // await serverMutate("/api/properties/bookings", "POST", {
+    //   ...body,
+    //   status: "Pending",
+    // });
 
     // 4. RETURN THE SESSION URL (This will never be null)
     return NextResponse.json({ url: session.url });
