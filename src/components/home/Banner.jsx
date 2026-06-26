@@ -87,6 +87,8 @@ export default function Banner() {
                     <SelectItem value="Apartment">Apartment</SelectItem>
                     <SelectItem value="Villa">Villa</SelectItem>
                     <SelectItem value="Penthouse">Penthouse</SelectItem>
+                    <SelectItem value="Cabin">Cabin</SelectItem>
+                    <SelectItem value="Studio">Studio</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>

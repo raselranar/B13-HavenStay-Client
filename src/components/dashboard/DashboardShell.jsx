@@ -9,6 +9,9 @@ import {
   LogOut,
   ArrowLeft,
   User,
+  Building,
+  User2,
+  CirclePlus,
 } from "lucide-react";
 
 import {
@@ -49,7 +52,7 @@ export default function DashboardShell({ children, user = null }) {
 
   const AllMenuItems = {
     tenant: [
-      { name: "Dashboard", href: "/dashboard/tenant", icon: LayoutDashboard },
+      { name: "Overview", href: "/dashboard/tenant", icon: LayoutDashboard },
       {
         name: "My Bookings",
         href: "/dashboard/tenant/my-bookings",
@@ -57,6 +60,21 @@ export default function DashboardShell({ children, user = null }) {
       },
       { name: "Favorites", href: "/dashboard/tenant/favorites", icon: Heart },
       { name: "Profile", href: "/dashboard/tenant/profile", icon: User },
+    ],
+    owner: [
+      { name: "Overview", href: "/dashboard/owner", icon: LayoutDashboard },
+      {
+        name: "Add Property",
+        href: "/dashboard/owner/add-property",
+        icon: CirclePlus,
+      },
+      {
+        name: "My Properties",
+        href: "/dashboard/owner/my-properties",
+        icon: Building,
+      },
+      { name: "Bookings", href: "/dashboard/owner/bookings", icon: BookOpen },
+      { name: "Profile", href: "/dashboard/owner/profile", icon: User2 },
     ],
   };
 
@@ -84,7 +102,7 @@ export default function DashboardShell({ children, user = null }) {
               </SidebarHeader>
 
               <div className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-xl border border-gray-100/60">
-                <Avatar>
+                <Avatar size="lg">
                   <AvatarImage src={user?.image} />
                   <AvatarFallback>{avatarName(user?.name)}</AvatarFallback>
                 </Avatar>
@@ -100,7 +118,7 @@ export default function DashboardShell({ children, user = null }) {
 
               <nav className="flex-1">
                 <SidebarMenu>
-                  {menuItems.map((item) => {
+                  {menuItems?.map((item) => {
                     const isActive = pathname === item.href;
                     const Icon = item.icon;
                     return (

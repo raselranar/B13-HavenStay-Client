@@ -30,10 +30,9 @@ export const serverFetch = async (path) => {
 };
 
 export const serverMutate = async (path, method = "POST", data = {}) => {
+  console.log(data);
   const url = `${baseUrl}${path}`;
-  if (!data.userId) {
-    data.user = await getUserSession();
-  }
+
   try {
     const response = await axios({
       method,

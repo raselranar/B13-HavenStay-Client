@@ -230,6 +230,11 @@ export default function RegisterPage() {
                     value: 6,
                     message: "Password must be at least 6 characters",
                   },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/,
+                    message:
+                      "Password must include uppercase, lowercase, number, and special character",
+                  },
                 })}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
