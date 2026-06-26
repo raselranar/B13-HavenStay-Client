@@ -1,33 +1,37 @@
+import { protectedFetch } from "@/lib/core/server";
 import { getUserSession } from "@/lib/core/session";
-import { ArrowUpRight, Heart, Calendar, CreditCard } from "lucide-react";
+import { ArrowUpRight, Heart, Calendar, CreditCard, Home } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Tenant Dashboard",
+};
 export default async function TenantDashboard() {
   const session = await getUserSession();
   const user = session?.user;
+  const analytics = await protectedFetch("/api/properties/tenant-analytics");
 
-  // Mock data arrays matching database entries for real-time visualization mapping
   const analyticsData = [
     {
       label: "Active Bookings",
-      value: "3",
+      value: analytics?.bookingsCount ?? 0,
       sub: "Properties booked",
       icon: Calendar,
       color: "text-blue-600",
     },
     {
       label: "Saved Places",
-      value: "12",
+      value: analytics?.favoritesCount ?? 0,
       sub: "Homes in favorites",
       icon: Heart,
       color: "text-pink-600",
     },
     {
-      label: "Total Spent",
-      value: "$4,280",
-      sub: "Past 12 months",
-      icon: CreditCard,
+      label: "Active Rentals",
+      value: analytics?.activeRentalsCount ?? 0,
+      sub: "Properties rented",
+      icon: Home,
       color: "text-indigo-600",
     },
   ];

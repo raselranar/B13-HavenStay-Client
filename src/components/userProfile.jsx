@@ -1,21 +1,11 @@
 import { getUserSession } from "@/lib/core/session";
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  ShieldCheck,
-  Building2,
-} from "lucide-react";
+import { User, Mail } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { timeFormat } from "@/lib/utils";
 
-export default async function UserProfilePage() {
-  const { user: userData } = await getUserSession();
-  console.log(userData);
-  const avatarUrl = userData?.images || null;
+export default async function UserProfilePage({ userData }) {
+  const avatarUrl = userData?.image || null;
   const initials =
     userData?.name
       ?.split(" ")

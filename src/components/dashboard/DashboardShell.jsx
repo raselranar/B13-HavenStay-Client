@@ -77,7 +77,7 @@ export default function DashboardShell({ children, user = null }) {
                     {user?.name}
                   </h4>
                   <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
-                    Premium Member
+                    {user?.role}
                   </p>
                 </div>
               </div>
