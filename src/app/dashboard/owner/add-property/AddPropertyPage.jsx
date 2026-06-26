@@ -13,6 +13,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { serverMutate } from "@/lib/core/server";
+import { toast } from "sonner";
 
 export default function AddPropertyPage({ ownerData }) {
   const [loading, setLoading] = useState(false);
@@ -60,19 +61,20 @@ export default function AddPropertyPage({ ownerData }) {
         payload,
       );
       console.log(response);
-      // if (response.data.success) {
-      //   setMessage({
-      //     type: "success",
-      //     text: "Listing added successfully! Status is currently Pending Admin Review.",
-      //   });
-      //   reset();
-      // }
+      if (response?.insertedId) {
+        setMessage({
+          type: "success",
+          text: "Listing added successfully! Status is currently Pending Admin Review.",
+        });
+        toast.success("New Property added successfully");
+        reset();
+      }
     } catch (error) {
       setMessage({
         type: "error",
-        text:
-          error.response?.data?.error || "Failed to create property profile.",
+        text: "Failed to create property profile.",
       });
+      toast.error("Failed to create property profile.");
     } finally {
       setLoading(false);
     }

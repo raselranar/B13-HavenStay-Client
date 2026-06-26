@@ -42,3 +42,4 @@ next-env.d.ts
 ai.md
 sync-stripe.js
 stripe-products-export.json
+.vercel.env

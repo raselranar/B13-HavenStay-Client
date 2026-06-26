@@ -30,7 +30,6 @@ export const serverFetch = async (path) => {
 };
 
 export const serverMutate = async (path, method = "POST", data = {}) => {
-  console.log(data);
   const url = `${baseUrl}${path}`;
 
   try {
