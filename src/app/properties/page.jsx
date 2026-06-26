@@ -4,7 +4,7 @@ import PropertiesPage from "./PropertiesPage";
 const page = async ({ searchParams }) => {
   const searchQuery = await searchParams;
   const query = new URLSearchParams(searchQuery).toString();
-  const properties = await protectedFetch("/api/properties?" + query);
+  const properties = await protectedFetch(`/api/properties?${query}`);
   console.log("properties: " + properties);
   return <PropertiesPage properties={properties} filter={searchQuery} />;
 };
