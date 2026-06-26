@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   BookOpen,
@@ -26,10 +26,26 @@ import {
 import { Button } from "../ui/button";
 import { avatarName } from "@/app/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 export default function DashboardShell({ children, user = null }) {
   const pathname = usePathname();
+  const router = useRouter();
+
   const role = user?.role;
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          toast.info("Logged out successfully");
+          router.push("/login");
+          router.refresh();
+        },
+      },
+    });
+  };
 
   const AllMenuItems = {
     tenant: [
@@ -115,6 +131,7 @@ export default function DashboardShell({ children, user = null }) {
                   <Button
                     variant="destructive"
                     size="sm"
+                    onClick={handleLogout}
                     className="w-full p-4 flex items-center gap-3">
                     <LogOut className="size-4" />
                     Logout

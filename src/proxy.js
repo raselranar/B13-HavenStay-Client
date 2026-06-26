@@ -13,5 +13,5 @@ export async function proxy(request) {
   //   }
 }
 export const config = {
-  matcher: ["/properties/:path+"],
+  matcher: ["/properties/:path+", "/dashboard/:path*"],
 };
