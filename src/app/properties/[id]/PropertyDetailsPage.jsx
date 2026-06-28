@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   MapPin,
@@ -23,7 +23,12 @@ import { toast } from "sonner";
 import { timeFormat } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-export default function PropertyDetailsPage({ propertyData, userId }) {
+export default function PropertyDetailsPage({
+  propertyData,
+  userId,
+  userName,
+}) {
+  console.log(userName);
   const router = useRouter();
   // Directly initializing state using property data arrays
   const [activeImage, setActiveImage] = useState(propertyData?.images?.[0]);
@@ -50,7 +55,7 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
   } = useForm();
 
   // Dynamic review mock instances fulfilling standard display formatting rules
-  const [reviews, setReviews] = useState(propertyData.reviews || []);
+  const [reviews, setReviews] = useState(propertyData?.reviews || []);
 
   const handleAddToFavorites = async () => {
     if (!userId) {
@@ -78,6 +83,7 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
       const res = await axios.post("/api/checkout_sessions", {
         propertyId: propertyData?._id,
         userId,
+        userName,
         title: propertyData?.title,
         rent: propertyData?.rent,
         rentType: propertyData?.rentType,
@@ -88,7 +94,7 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
         ownerInfo: {
           name: propertyData?.ownerInfo?.name,
           email: propertyData?.ownerInfo?.email,
-          phone: propertyData?.ownerInfo?.phone,
+          ownerId: propertyData?.ownerInfo?.ownerId,
         },
 
         ...data,
@@ -139,6 +145,11 @@ export default function PropertyDetailsPage({ propertyData, userId }) {
       setIsSubmittingReview(false);
     }
   };
+  useEffect(() => {
+    if (!propertyData) {
+      router.push("/unauthorized");
+    }
+  }, []);
   if (!propertyData) {
     return (
       <div className="text-center py-24 text-sm text-gray-500">

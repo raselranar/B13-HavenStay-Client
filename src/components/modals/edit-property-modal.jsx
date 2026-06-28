@@ -91,7 +91,7 @@ export default function EditPropertyModal({
         "PUT",
         payload,
       );
-      if (response?.modifiedCount < 1) {
+      if (response?.modifiedCount > 0) {
         toast.success("Property updated successfully. Awaiting review.");
         onUpdate();
       }

@@ -43,7 +43,7 @@ const MyBookingPage = async () => {
                 <td className="py-3.5 px-4 text-center">
                   <span
                     className={`px-2.5 py-1 capitalize font-bold ${
-                      row.paymentStatus.toLowerCase() === "approved"
+                      row?.paymentStatus?.toLowerCase() === "approved"
                         ? " text-emerald-600 border "
                         : row.paymentStatus === "pending"
                           ? " text-amber-600 "
@@ -55,7 +55,7 @@ const MyBookingPage = async () => {
                 <td className="py-3.5 px-4 text-center">
                   <span
                     className={`capitalize px-2.5 py-1 ${
-                      row.bookingStatus.toLowerCase() === "approved"
+                      row.bookingStatus?.toLowerCase() === "approved"
                         ? " text-emerald-600 "
                         : row.bookingStatus === "pending"
                           ? " text-amber-600 "

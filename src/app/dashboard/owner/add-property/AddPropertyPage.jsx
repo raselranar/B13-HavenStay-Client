@@ -81,7 +81,7 @@ export default function AddPropertyPage({ ownerData }) {
   };
 
   return (
-    <div className="w-full space-y-8 p-6 lg:p-8 max-w-5xl mx-auto">
+    <div className="w-full space-y-8 mx-auto">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
           Add New Property
@@ -342,11 +342,8 @@ export default function AddPropertyPage({ ownerData }) {
         </div>
 
         {/* Submit Execution Action */}
-        <div className="pt-2">
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors disabled:bg-emerald-400">
+        <div className="pt-2 w-full">
+          <Button type="submit" size="lg" disabled={loading} className="">
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (

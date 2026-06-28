@@ -7,9 +7,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import EditPropertyModal from "@/components/modals/edit-property-modal";
 import { useRouter } from "next/navigation";
+import DeleteConfirmation from "@/components/ui/delete-confirmation";
+import { serverMutate } from "@/lib/core/server";
+import { toast } from "sonner";
 
 export default function MyPropertiesPage({ ownerProperties = [] }) {
-  const [properties, setProperties] = useState(ownerProperties);
+  console.log(ownerProperties);
   const [editingProperty, setEditingProperty] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const router = useRouter();
@@ -19,20 +22,41 @@ export default function MyPropertiesPage({ ownerProperties = [] }) {
     setIsEditOpen(true);
   };
   const handleUpdateSuccess = () => {
-    router.push("dashboard/owner/my-properties");
+    router.refresh();
+    return;
   };
 
-  const handleDelete = async (item) => {
-    const targetId = item.propertyId || item._id;
-    if (!confirm("Are you sure you want to delete this listing?")) return;
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedToDelete, setSelectedToDelete] = useState(null);
+  const [loadingId, setLoadingId] = useState(null);
+
+  const handleDelete = (item) => {
+    setSelectedToDelete(item);
+    setConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    const item = selectedToDelete;
+    if (!item) return;
+    const id = item._id;
+    console.log(id);
+    setLoadingId(id);
 
     try {
-      await axios.delete(`/api/owner/properties/${targetId}`);
-      setProperties(
-        properties.filter((p) => (p.propertyId || p._id) !== targetId),
-      );
+      const res = await serverMutate("/api/owner/properties", "DELETE", {
+        id: id,
+      });
+
+      // If deletion was successful, refresh the page or update state
+      toast.success("Item deleted successfully");
+      router.refresh();
+      setConfirmOpen(false);
+      setSelectedToDelete(null);
     } catch (err) {
+      console.error(err);
       alert("Error deleting item.");
+    } finally {
+      setLoadingId(null);
     }
   };
 
@@ -75,7 +99,7 @@ export default function MyPropertiesPage({ ownerProperties = [] }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {properties.map((item) => {
+            {ownerProperties?.map((item) => {
               const itemId = item.propertyId || item._id;
               // Handle case-insensitive status matching securely
               const normalizedStatus = item.status?.toLowerCase() || "pending";
@@ -149,7 +173,7 @@ export default function MyPropertiesPage({ ownerProperties = [] }) {
                 </tr>
               );
             })}
-            {properties.length === 0 && (
+            {ownerProperties?.length === 0 && (
               <tr>
                 <td
                   colSpan="6"
@@ -161,6 +185,15 @@ export default function MyPropertiesPage({ ownerProperties = [] }) {
           </tbody>
         </table>
       </div>
+      <DeleteConfirmation
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Delete listing"
+        description="This will permanently delete your listing. This action cannot be undone."
+        itemName={selectedToDelete?.title}
+        onConfirm={confirmDelete}
+        loading={loadingId === selectedToDelete?._id}
+      />
       <EditPropertyModal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}

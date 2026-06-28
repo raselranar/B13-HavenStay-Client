@@ -1,20 +1,36 @@
+import { protectedFetch, serverMutate } from "@/lib/core/server";
+import { stripe } from "@/lib/stripe";
+import { line } from "better-auth/types";
 import Link from "next/link";
 
-export default function SuccessPage() {
-  const booking = {
-    contactNumber: "+8801836127131",
-    moveInDate: "2026-06-15",
-    propertyId: "6a3518c465cbca76c268cb40",
-    rent: "4500",
-    title: "Metropolitan Loft",
-    userId: "6a350ab41b12408ad00d6aaa",
-    paymentStatus: "paid",
-    bookingStatus: "pending",
-    createdAt: "2026-06-25T00:37:53.965+00:00",
-  };
+export default async function SuccessPage({ searchParams }) {
+  const sessionParams = await searchParams;
+  if (!sessionParams?.session_id) {
+    throw new Error("No session id found");
+  }
 
-  const formattedCreatedAt = new Date(booking.createdAt).toLocaleString();
+  const session = await stripe.checkout.sessions.retrieve(
+    sessionParams?.session_id,
+    { expand: ["payment_intent", "line_items"] },
+  );
 
+  const booking = session?.metadata;
+  // console.log(booking);
+  // console.log(session);
+  const bookingsData = await protectedFetch(
+    "/api/properties/bookings?transactionId=" + session.payment_intent.id,
+  );
+  // console.log(bookingsData);
+  if (!bookingsData || bookingsData.length === 0) {
+    // console.log("here");
+    await serverMutate("/api/properties/bookings", "POST", {
+      ...booking,
+      ownerInfo: JSON.parse(booking.ownerInfo),
+      bookingStatus: "pending",
+      transactionId: session.payment_intent.id,
+      paymentStatus: session.payment_status,
+    });
+  }
   return (
     <main className="min-h-screen bg-slate-50 py-20 px-4 text-slate-900">
       <div className="mx-auto max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-10 shadow-xl shadow-slate-200/40">
@@ -93,10 +109,6 @@ export default function SuccessPage() {
                 </p>
               </div>
             </div>
-
-            <p className="mt-3 text-xs text-slate-500">
-              Created: {formattedCreatedAt}
-            </p>
           </div>
 
           <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:justify-end">

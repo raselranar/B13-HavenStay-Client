@@ -10,7 +10,7 @@ export async function POST(request) {
 
     const body = await request.json();
     const {
-      propertyId, // Make sure you pass the property ID from your client
+      propertyId,
       title,
       description,
       rent,
@@ -20,8 +20,10 @@ export async function POST(request) {
       moveInDate,
       contactNumber,
       additionalNotes,
+      ownerInfo,
+      userName,
     } = body;
-
+    console.log({ userName });
     // 1. CREATE A STRIPE CHECKOUT SESSION INSTEAD
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -49,14 +51,13 @@ export async function POST(request) {
         moveInDate,
         contactNumber,
         additionalNotes: additionalNotes || "",
+        ownerInfo: JSON.stringify(ownerInfo),
+        userName,
       },
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
     });
-    console.log(session);
-    // await serverMutate("/api/properties/bookings", "POST", {
-    //   ...body,
-    //   status: "Pending",
-    // });
+    // console.log(session);
+    console.log({ metadata: session.metadata });
 
     // 4. RETURN THE SESSION URL (This will never be null)
     return NextResponse.json({ url: session.url });

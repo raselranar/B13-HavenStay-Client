@@ -9,7 +9,7 @@ const ProfilePage = async () => {
   const userSession = await getUserSession();
   const role = await getUserRole();
 
-  if (role !== "tenant") {
+  if (role !== "owner") {
     redirect("/unauthorized");
   }
 

@@ -29,10 +29,6 @@ export default function PropertiesPage({ properties, filter }) {
 
   const visible = properties;
 
-  const handleDetails = (id) => {
-    router.push(`/properties/${id}`);
-  };
-
   return (
     <main className="min-h-screen bg-background py-12">
       <div className="max-w-7xl mx-auto px-6">

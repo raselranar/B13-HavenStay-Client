@@ -57,13 +57,11 @@ const PropertiesCard = ({ property, idx, hideButton = null }) => {
             <span>🛁 {property.bathrooms} Baths</span>
           </div>
         </div>
-
-        <Button
-          className={"py-4 text-sm" + (hideButton ? " hidden" : "")}
-          onClick={() => handleDetailsRedirect(property._id)}
-          asChild>
-          <Link href={`/properties/${property._id}`}>View Details</Link>
-        </Button>
+        {!hideButton && (
+          <Button className={"py-4 text-sm"} asChild>
+            <Link href={`/properties/${property._id}`}>View Details</Link>
+          </Button>
+        )}
       </div>
     </MotionCard>
   );

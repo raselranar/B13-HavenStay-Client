@@ -9,8 +9,8 @@ export const generateMetadata = async ({ params }) => {
   console.log(property);
 
   return {
-    title: property.title,
-    description: property.description,
+    title: property?.title,
+    description: property?.description,
   };
 };
 
@@ -25,7 +25,12 @@ const page = async ({ params }) => {
   console.log(property);
 
   return (
-    <PropertyDetailsPage id={id} propertyData={property} userId={userId} />
+    <PropertyDetailsPage
+      id={id}
+      propertyData={property}
+      userId={userId}
+      userName={session?.user?.name}
+    />
   );
 };
 export default page;
