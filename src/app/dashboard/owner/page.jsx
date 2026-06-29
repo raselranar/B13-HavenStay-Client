@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { protectedFetch } from "@/lib/core/server";
 import { useRouter } from "next/navigation";
-import Chart from "@/components/Chart";
+import MonthlyEarningsChart from "@/components/MonthlyEarningsChart";
 
 export default function OwnerAnalyticsDashboard() {
   const [metrics, setMetrics] = useState(null);
@@ -101,7 +101,7 @@ export default function OwnerAnalyticsDashboard() {
     <div className="space-y-8">
       <Header />
       <MetricsCards cards={cardConfig} />
-      <Chart data={metrics?.monthlyEarnings || []} />
+      <MonthlyEarningsChart data={metrics?.monthlyEarnings || []} />
     </div>
   );
 }

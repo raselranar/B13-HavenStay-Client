@@ -31,9 +31,11 @@ export default async function SuccessPage({ searchParams }) {
       paymentStatus: session.payment_status,
     });
   }
+
+  console.log(booking);
   return (
     <main className="min-h-screen bg-slate-50 py-20 px-4 text-slate-900">
-      <div className="mx-auto max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-10 shadow-xl shadow-slate-200/40">
+      <div className="mx-auto max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-3 shadow-xl shadow-slate-200/40">
         <div className="mb-8 text-center">
           <p className="mb-4 text-sm uppercase tracking-[0.25em] text-indigo-600">
             Booking received
@@ -48,11 +50,8 @@ export default async function SuccessPage({ searchParams }) {
           </p>
         </div>
 
-        <div className="space-y-6 rounded-3xl border border-slate-100 bg-slate-50 p-6">
+        <div className="space-y-4">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-green-100 text-green-700">
-              ✓
-            </div>
             <div>
               <p className="text-sm font-semibold text-slate-900">
                 Booking summary
@@ -63,7 +62,7 @@ export default async function SuccessPage({ searchParams }) {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
+          <div className="">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <p className="text-xs text-slate-500">Property</p>
@@ -73,10 +72,10 @@ export default async function SuccessPage({ searchParams }) {
                 </p>
               </div>
 
-              <div>
+              <div className="overflow-hidden">
                 <p className="text-xs text-slate-500">Tenant</p>
-                <p className="font-medium text-slate-900">
-                  User ID: {booking.userId}
+                <p className="font-medium text-slate-900 text-wrap  ">
+                  User ID: <br className="sm:hidden" /> {booking.userId}
                 </p>
                 <p className="mt-1 text-xs text-slate-500">
                   Contact: {booking.contactNumber}
@@ -95,19 +94,19 @@ export default async function SuccessPage({ searchParams }) {
                 <p className="font-medium text-slate-900">${booking.rent}</p>
               </div>
 
-              <div>
+              {/* <div>
                 <p className="text-xs text-slate-500">Payment status</p>
                 <p className="font-medium text-slate-900">
                   {booking.paymentStatus}
                 </p>
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <p className="text-xs text-slate-500">Booking status</p>
                 <p className="font-medium text-slate-900">
                   {booking.bookingStatus}
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
 

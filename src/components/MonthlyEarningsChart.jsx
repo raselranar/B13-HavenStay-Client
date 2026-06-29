@@ -1,7 +1,30 @@
-import { LineChart, TrendingUp } from "lucide-react";
-import { Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { TrendingUp } from "lucide-react";
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-const Chart = ({ data }) => {
+const MonthlyEarningsChart = ({ data }) => {
+  console.log(data);
+  //  output data
+  // [
+  //   { name: 'Jan', earnings: 0 },
+  //   { name: 'Feb', earnings: 0 },
+  //   { name: 'Mar', earnings: 0 },
+  //   { name: 'Apr', earnings: 0 },
+  //   { name: 'May', earnings: 0 },
+  //   { name: 'Jun', earnings: 850 },
+  //   { name: 'Jul', earnings: 0 },
+  //   { name: 'Aug', earnings: 0 },
+  //   { name: 'Sep', earnings: 0 },
+  //   { name: 'Oct', earnings: 0 },
+  //   { name: 'Nov', earnings: 0 },
+  //   { name: 'Dec', earnings: 0 }
+  // ]
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-4 border-b border-slate-50">
@@ -61,7 +84,7 @@ const Chart = ({ data }) => {
             />
             <Line
               type="monotone"
-              dataKey="amount"
+              dataKey="earnings"
               stroke="#4f46e5"
               strokeWidth={3}
               dot={{ r: 5, strokeWidth: 2, fill: "#ffffff" }}
@@ -73,4 +96,4 @@ const Chart = ({ data }) => {
     </div>
   );
 };
-export default Chart;
+export default MonthlyEarningsChart;
