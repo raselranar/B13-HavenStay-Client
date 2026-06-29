@@ -28,6 +28,8 @@ export default function EditPropertyModal({
   onClose,
   property,
   onUpdate,
+  apiPath = "/api/owner/properties",
+  resetStatus = false,
 }) {
   const {
     register,
@@ -81,13 +83,13 @@ export default function EditPropertyModal({
       ...data,
       amenities: amenityList,
       images: imageUrls,
-      status: "pending", // Reset status back to pending after changes per rules
+      status: resetStatus ? "pending" : property.status || "pending",
     };
 
     try {
       // Dynamic fallback updates matching framework paradigms
       const response = await serverMutate(
-        `/api/owner/properties/${targetId}`,
+        `${apiPath}/${targetId}`,
         "PUT",
         payload,
       );
@@ -302,7 +304,7 @@ export default function EditPropertyModal({
             <textarea
               rows={3}
               {...register("images", { required: "Image links required" })}
-              className="mt-1 w-full rounded-lg border border-gray-200 p-2 text-sm focus:border-emerald-500 focus:outline-none font-mono text-xs"
+              className="mt-1 w-full rounded-lg border border-gray-200 p-2 text-xs focus:border-emerald-500 focus:outline-none font-mono"
             />
           </div>
 

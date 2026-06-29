@@ -46,12 +46,13 @@ export default function MyPropertiesPage({ ownerProperties = [] }) {
       const res = await serverMutate("/api/owner/properties", "DELETE", {
         id: id,
       });
-
-      // If deletion was successful, refresh the page or update state
-      toast.success("Item deleted successfully");
-      router.refresh();
-      setConfirmOpen(false);
-      setSelectedToDelete(null);
+      if (res.deletedCount !== 0) {
+        // If deletion was successful, refresh the page or update state
+        toast.success("Item deleted successfully");
+        router.refresh();
+        setConfirmOpen(false);
+        setSelectedToDelete(null);
+      }
     } catch (err) {
       console.error(err);
       alert("Error deleting item.");

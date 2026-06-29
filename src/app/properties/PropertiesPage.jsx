@@ -16,18 +16,16 @@ export default function PropertiesPage({ properties, filter }) {
   const [minPrice, setMinPrice] = useState(filter.minPrice || "");
   const [maxPrice, setMaxPrice] = useState(filter.maxPrice || "");
   const [page, setPage] = useState(1);
-  const pageSize = 9;
-  const [totalPages, setTotalPages] = useState(
-    Math.max(
-      1,
-      Math.ceil(
-        (properties?.total ?? properties?.length ?? properties.length) /
-          pageSize,
-      ),
-    ),
-  );
+  const pageSize = 3;
 
-  const visible = properties;
+  const items = Array.isArray(properties) ? properties : [];
+
+  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const visible = items.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
 
   return (
     <main className="min-h-screen bg-background py-12">
@@ -72,20 +70,29 @@ export default function PropertiesPage({ properties, filter }) {
           )}
         </div>
 
-        <div className="mt-8 flex items-center justify-center gap-3">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="px-3 py-2 rounded-md border">
-            Prev
-          </button>
-          <span className="px-3 py-2 rounded-md">
-            {page} / {totalPages}
-          </span>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="px-3 py-2 rounded-md border">
-            Next
-          </button>
+        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+          <div className="text-sm text-gray-500">
+            Showing {items.length === 0 ? 0 : (page - 1) * pageSize + 1} -{" "}
+            {Math.min(items.length, page * pageSize)} of {items.length}{" "}
+            properties
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+              className="rounded-md border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50">
+              Prev
+            </button>
+            <span className="px-3 py-2 rounded-md bg-gray-100 text-sm text-gray-700">
+              {page} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages}
+              className="rounded-md border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50">
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </main>

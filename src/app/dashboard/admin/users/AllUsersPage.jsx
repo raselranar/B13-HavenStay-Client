@@ -56,7 +56,7 @@ export default function AllUsersPage({ initialUsers = [] }) {
   };
 
   return (
-    <div className="w-full space-y-8 p-6 lg:p-8">
+    <div className="w-full space-y-8 ">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
           All Registered Users
@@ -79,10 +79,10 @@ export default function AllUsersPage({ initialUsers = [] }) {
               return (
                 <div
                   key={userId}
-                  className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm">
+                  className="rounded-3xl border border-gray-200 overflow-hidden bg-white p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="flex items-center gap-3 text-sm font-semibold text-gray-900">
+                      <div className="flex items-center sm:gap-3 text-sm font-semibold text-gray-900">
                         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-500">
                           <User className="h-4 w-4" />
                         </span>
@@ -139,9 +139,9 @@ export default function AllUsersPage({ initialUsers = [] }) {
         </div>
 
         <div className="hidden sm:block overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm">
-          <table className="w-full border-collapse text-left text-sm text-gray-500">
+          <table className="w-full border-collapse text-left *:text-sm text-gray-500">
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 tracking-wider">
-              <tr>
+              <tr className="*:text-sm">
                 <th className="px-6 py-4 font-semibold">User Identity</th>
                 <th className="px-6 py-4 font-semibold">Email Reference</th>
                 <th className="px-6 py-4 font-semibold">Current Role</th>
