@@ -47,7 +47,6 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      // Optional: If uploading directly via ImgBB as per instructions
       const formData = new FormData();
       formData.append("image", file);
 
@@ -231,7 +230,8 @@ export default function RegisterPage() {
                     message: "Password must be at least 6 characters",
                   },
                   pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/,
+                    value:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/,
                     message:
                       "Password must include uppercase, lowercase, number, and special character",
                   },

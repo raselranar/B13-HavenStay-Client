@@ -14,7 +14,7 @@ export default async function UserProfilePage({ userData }) {
       .toUpperCase() || "User";
 
   return (
-    <main className="min-h-screen py-10 md:px-6 mx-auto text-gray-900">
+    <main className="min-h-screen py-10 -m-4 w-full mx-auto text-gray-900">
       {/* Page Header Section */}
       <div className="mb-8 pb-4 border-b border-gray-100">
         <h1 className="text-2xl md:text-3xl font-black tracking-tight text-gray-900">

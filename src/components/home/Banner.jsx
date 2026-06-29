@@ -65,7 +65,7 @@ export default function Banner() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           onSubmit={handleSearch}
-          className="bg-gray-300/85 backdrop-blur-md p-4 rounded-2xl shadow-xl text-gray-800  items-center">
+          className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-xl text-gray-800  items-center">
           <div className="flex flex-wrap gap-4 justify-center items-center">
             <div className="flex gap-4 flex-1">
               <Input

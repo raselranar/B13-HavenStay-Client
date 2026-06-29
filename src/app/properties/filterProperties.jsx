@@ -51,17 +51,18 @@ export default function FilterProperties({
         />
       </div>
 
-      <div className="flex gap-3 justify-end items-center">
+      <div className="flex gap-3  justify-items-stretch sm:justify-end  flex-wrap md:flex-nowrap items-center">
         <Select
           value={typeFilter}
           onValueChange={(value) => {
             setTypeFilter(value);
             setPage(1);
+            className = "w-fit outline";
           }}>
           <SelectTrigger size="md">
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="">
             <SelectGroup>
               <SelectLabel>Property Type</SelectLabel>
               <SelectItem value="">All Types</SelectItem>

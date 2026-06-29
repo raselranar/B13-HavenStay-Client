@@ -12,6 +12,7 @@ import {
   Building,
   User2,
   CirclePlus,
+  Users,
 } from "lucide-react";
 
 import {
@@ -75,6 +76,28 @@ export default function DashboardShell({ children, user = null }) {
       },
       { name: "Bookings", href: "/dashboard/owner/bookings", icon: BookOpen },
       { name: "Profile", href: "/dashboard/owner/profile", icon: User2 },
+    ],
+    admin: [
+      {
+        name: "All Properties",
+        href: "/dashboard/admin/properties",
+        icon: Building,
+      },
+      {
+        name: "All Users",
+        href: "/dashboard/admin/users",
+        icon: Users,
+      },
+      {
+        name: "Transactions",
+        href: "/dashboard/admin/transactions",
+        icon: BookOpen,
+      },
+      {
+        name: "Profile",
+        href: "/dashboard/admin/profile",
+        icon: User2,
+      },
     ],
   };
 
