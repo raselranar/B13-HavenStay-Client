@@ -57,6 +57,6 @@ A modern, high-performance real estate and rental management platform designed t
 
 1. **Clone the project workspace:**
    ```bash
-   git clone [https://github.com/raselranar/B13-HavenStay-Client.git](https://github.com/raselranar/B13-HavenStay-Client.git)
+   git clone https://github.com/raselranar/B13-HavenStay-Client.git
    cd B13-HavenStay-Client
    ```
