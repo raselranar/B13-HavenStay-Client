@@ -1,4 +1,4 @@
-# HavenStay 🏨
+# HavenStay
 
 A modern, high-performance real estate and rental management platform designed to connect verified tenants with asset owners seamlessly. This platform streamlines property listings, admin approval cycles, analytics tracking, and role-based access management.
 
